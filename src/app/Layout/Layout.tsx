@@ -1,4 +1,3 @@
-// src/app/layout.tsx
 import Sidebar from "@/components/Sidebar";
 
 export default function RootLayout({

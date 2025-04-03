@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+// import { Link } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -64,6 +66,11 @@ export default function LoginPage() {
             Login
           </button>
         </form>
+        <p className = "text-center text-sm text-gray-600 mt-4">
+           <Link href="/register" className="text-blue-600 hover:underline">
+            Register here
+           </Link>
+        </p>
       </div>
     </div>
   );
