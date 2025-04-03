@@ -10,24 +10,30 @@ export default function LoginPage() {
   const router = useRouter();
 
   const mockUser = {
-    email: "test@user.com",
-    password: "password123",
+    email: "a@wpl.pl",
+    password: "aaaaaaa",
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // Mock authentication
-    if (email === mockUser.email && password === mockUser.password) {
-        localStorage.setItem("isAuthenticated", "true");
-        router.push("/dashboard");
-    };
-    //   router.push("/dashboard"); // Redirect to dashboard
-    // } else {
-    //   setError("Invalid email or password");
-    // }
+    const isAuthenticated = true;
+    if(isAuthenticated === true){
+      router.push('/dashboard');
+    }
+  //   if (email === mockUser.email && password === mockUser.password) {
+  //       localStorage.setItem("isAuthenticated", "true");
+  //       router.push("/dashboard");
+  //     } else {
+  //         setError("Invalid email or password");
+  //     };
+  //   //   router.push("/dashboard"); // Redirect to dashboard
+  //   // } else {
+  //   //   setError("Invalid email or password");
+  //   // }
+  // };
   };
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-96 p-6 bg-white shadow-md rounded-lg">
