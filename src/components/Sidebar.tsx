@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Home, ListChecks, BarChart} from "lucide-react"
+import { Home, ListChecks, BarChart, AppWindowIcon} from "lucide-react"
 import { useState } from "react";
 
 export default function Sidebar(){
@@ -31,6 +31,30 @@ export default function Sidebar(){
               onClick={() => handleNavigation("tests", "/tests")}
             >
               <ListChecks size={18} /> Test Playground
+            </li>
+            <li
+              className={`p-3 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
+                activeTab === "sql challenges" ? "bg-gray-300" : ""
+              }`}
+              onClick={() => handleNavigation("sql challenges", "/sql-challenges")}
+            >
+              <AppWindowIcon size={18} /> SQL Challenges	
+            </li>
+            <li
+              className={`p-3 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
+                activeTab === "task simulator" ? "bg-gray-300" : ""
+              }`}
+              onClick={() => handleNavigation("task simulator", "/task-simulator")}
+            >
+              <AppWindowIcon size={18} /> Task Simulator	
+            </li>
+            <li
+              className={`p-3 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
+                activeTab === "Settings" ? "bg-gray-300" : ""
+              }`}
+              onClick={() => handleNavigation("settings", "/settings")}
+            >
+              <AppWindowIcon size={18} /> Settings	
             </li>
             {/* Add more navigation items here */}
           </ul>
