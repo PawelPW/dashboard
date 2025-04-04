@@ -6,36 +6,35 @@ import Link from "next/link";
 // import { Link } from "lucide-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
-  const mockUser = {
-    email: "a@wpl.pl",
-    password: "aaaaaaa",
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Mock authentication
-    const isAuthenticated = true;
-    if(isAuthenticated === true){
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    try{
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    console.log("Response:", response);
+    const data = await response.json();
+    if (!response.ok) {
+      setError(data.error || 'Something went wrong');
+    }
+    else {
       router.push('/dashboard');
     }
-  //   if (email === mockUser.email && password === mockUser.password) {
-  //       localStorage.setItem("isAuthenticated", "true");
-  //       router.push("/dashboard");
-  //     } else {
-  //         setError("Invalid email or password");
-  //     };
-  //   //   router.push("/dashboard"); // Redirect to dashboard
-  //   // } else {
-  //   //   setError("Invalid email or password");
-  //   // }
-  // };
+    }catch (error) {
+      console.error('Error:', error);
+      setError('Failed to login. Please try again.');
+    }
   };
+
+
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-96 p-6 bg-white shadow-md rounded-lg">
