@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-// import { Link } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');

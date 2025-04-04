@@ -18,17 +18,17 @@ export default function Sidebar(){
           <ul>
             <li
               className={`p-3 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
-                activeTab === "progress" ? "bg-gray-300" : ""
+                activeTab === "dashboard" ? "bg-gray-300" : ""
               }`}
-              onClick={() => handleNavigation("progress", "/progress")}
+              onClick={() => handleNavigation("dashboard", "/dashboard")}
             >
               <BarChart size={18} /> Progress
             </li>
             <li
               className={`p-3 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
-                activeTab === "tests" ? "bg-gray-300" : ""
+                activeTab === "test-playground" ? "bg-gray-300" : ""
               }`}
-              onClick={() => handleNavigation("tests", "/tests")}
+              onClick={() => handleNavigation("test playground", "/test-playground")}
             >
               <ListChecks size={18} /> Test Playground
             </li>
@@ -42,11 +42,11 @@ export default function Sidebar(){
             </li>
             <li
               className={`p-3 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
-                activeTab === "task simulator" ? "bg-gray-300" : ""
+                activeTab === "test simulator" ? "bg-gray-300" : ""
               }`}
-              onClick={() => handleNavigation("task simulator", "/task-simulator")}
+              onClick={() => handleNavigation("test simulator", "/test-simulator")}
             >
-              <AppWindowIcon size={18} /> Task Simulator	
+              <AppWindowIcon size={18} /> Test Simulator	
             </li>
             <li
               className={`p-3 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
