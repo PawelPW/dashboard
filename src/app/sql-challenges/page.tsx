@@ -37,80 +37,109 @@ export default function SqlChallengePage({ children }: { children: React.ReactNo
     console.log("Running query:", query);
     if (!db) {
       setError("Failed to load database.");
-      return; 
+      setQueryResult(null); // Clear the table
+      return;
     }
+  
     try {
       const result = db.exec(query);
+  
       if (result.length === 0) {
         setFeedback("Query ran, but returned no results.");
-        setQueryResult(null); // Clear previous results
+        setQueryResult(null); // Clear the table
         return;
       }
+  
       const { columns, values } = result[0];
-
-      setQueryResult({ columns, values });
-
+  
+      // Compare the result with the expected output
       const pass =
         JSON.stringify(columns) === JSON.stringify(challenge.expectedResult.columns) &&
         JSON.stringify(values) === JSON.stringify(challenge.expectedResult.values);
-
+  
       setFeedback(pass ? "✅ Correct!" : "❌ Incorrect, try again.");
+      setQueryResult({ columns, values }); // Show the table only when the query is valid
     } catch (err: any) {
       setFeedback("Error: " + err.message);
+      setQueryResult(null); // Clear the table on error
     }
   };
 
-  return(
-    <div className="flex min-h-screen">
+  return (
+    <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content */}
-      <div className="flex-1 p-4">
-        <h1 className="text-xl font-bold">{challenge.title}</h1>
-        <p className="text-gray-600 mb-4">{challenge.description}</p>
+      <div className="flex-1 p-6 bg-white shadow-md rounded-lg mx-auto max-w-4xl">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">{challenge.title}</h1>
+        <p className="text-gray-600 mb-6">{challenge.description}</p>
+
+        {/* SQL Input */}
         <textarea
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           rows={5}
           placeholder="Write your SQL here..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+
+        {/* Run Query Button */}
         <button
-          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
-          onClick={handleRun}>
+          className="mt-4 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          onClick={handleRun}
+        >
           Run Query
         </button>
-        {feedback && <p className="mt-3 font-semibold">{feedback}</p>}
+
+        {/* Feedback */}
+        {feedback && (
+          <p
+            className={`mt-4 font-semibold ${
+              feedback.startsWith("✅") ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {feedback}
+          </p>
+        )}
+
+        {/* Query Results */}
+        {queryResult && (
+          <div className="mt-6 p-4 bg-gray-50 border border-gray-300 rounded-lg shadow-sm">
+            <h2 className="text-lg font-bold text-gray-800 mb-2">Query Results:</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300 text-sm">
+                <thead>
+                  <tr>
+                    {queryResult.columns.map((column, index) => (
+                      <th
+                        key={index}
+                        className="border border-gray-300 px-4 py-2 bg-gray-100 text-left font-medium text-gray-700"
+                      >
+                        {column}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {queryResult.values.map((row, rowIndex) => (
+                    <tr key={rowIndex} className="hover:bg-gray-50">
+                      {row.map((value, colIndex) => (
+                        <td
+                          key={colIndex}
+                          className="border border-gray-300 px-4 py-2 text-gray-700"
+                        >
+                          {value}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
-      {queryResult && (
-      <div className="mt-4">
-        <h2 className="text-lg font-bold">Query Results:</h2>
-        <table className="w-full border-collapse border border-gray-300 mt-2">
-          <thead>
-            <tr>
-              {queryResult.columns.map((column, index) => (
-                <th key={index} className="border border-gray-300 px-2 py-1 bg-gray-100">
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {queryResult.values.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {row.map((value, colIndex) => (
-                  <td key={colIndex} className="border border-gray-300 px-2 py-1">
-                    {value}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      )}
     </div>
-    
   );
 }
