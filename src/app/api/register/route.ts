@@ -1,9 +1,4 @@
-import { Prisma } from "@prisma/client";
-// import { PrismaClient } from "@prisma/client/extension";
 import { PrismaClient } from '@prisma/client'
-
-// use `prisma` in your application to read and write data in your DB
-import { error } from "console";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
