@@ -1,35 +1,51 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
+import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
-import { error } from "console";
-import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
+const SECRET_KEY = "testtoken"; // Replace with your actual secret key
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
     try {
-        const url = new URL(request.url);
-        const userId = url.searchParams.get('userId');
-
-        if (!userId) {
-            return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+        // Get the Authorization header
+        const authHeader = request.headers.get("Authorization");
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
+        // Extract the token
+        const token = authHeader.split(" ")[1];
+
+        // Verify and decode the token
+        let decoded;
+        try {
+            decoded = jwt.verify(token, SECRET_KEY) as { id: number };
+        } catch (err) {
+            return NextResponse.json({ error: "Invalid or expired token" }, { status: 401 });
+        }
+
+        // Extract the user ID from the token
+        const userId = decoded.id;
+
+        // Fetch the user from the database
         const user = await prisma.user.findUnique({
-            where: { id: Number(userId) },
+            where: { id: userId },
             select: {
                 id: true,
                 name: true,
                 email: true,
-                // profilePicture: true, 
+                // profilePicture: true, // Uncomment if needed
             },
         });
 
         if (!user) {
-            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+            return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
-        console.log(user);
+
+        // Return the user profile
         return NextResponse.json(user, { status: 200 });
     } catch (error) {
-        console.error('Error fetching user profile:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error("Error fetching user profile:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

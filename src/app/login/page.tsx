@@ -1,4 +1,4 @@
-"use client"; // ✅ Important: Marks this as a Client Component
+"use client"; // ✅ Marks this as a Client Component
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -10,29 +10,49 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try{
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    console.log("Response:", response);
-    const data = await response.json();
-    if (!response.ok) {
-      setError(data.error || 'Something went wrong');
-    }
-    else {
+    setError(''); // Clear previous errors
+
+    try {
+      // Send login request
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Something went wrong');
+        return;
+      }
+
+      // Extract token from the response
+      const { token } = data;
+
+      // Fetch user profile using the token
+      const profileResponse = await fetch('/api/profile', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!profileResponse.ok) {
+        throw new Error('Failed to fetch user profile');
+      }
+
+      const profileData = await profileResponse.json();
+      console.log('User Profile:', profileData);
+
+      // Redirect to the dashboard
       router.push('/dashboard');
-    }
-    }catch (error) {
-      console.error('Error:', error);
-      setError('Failed to login. Please try again.');
+    } catch (err: any) {
+      console.error('Error:', err);
+      setError(err.message || 'Failed to login. Please try again.');
     }
   };
-
-
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -60,14 +80,18 @@ export default function LoginPage() {
               required
             />
           </div>
-          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          >
             Login
           </button>
         </form>
-        <p className = "text-center text-sm text-gray-600 mt-4">
-           <Link href="/register" className="text-blue-600 hover:underline">
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Don't have an account?{' '}
+          <Link href="/register" className="text-blue-600 hover:underline">
             Register here
-           </Link>
+          </Link>
         </p>
       </div>
     </div>
