@@ -30,8 +30,11 @@ export default function LoginPage() {
       }
 
       // Extract token from the response
-      const { token } = data;
+      const  {token}  = data;
 
+      localStorage.setItem("token", token); // Store the token in localStorage
+
+      console.log('Data:', token);
       // Fetch user profile using the token
       const profileResponse = await fetch('/api/profile', {
         headers: {
@@ -42,8 +45,9 @@ export default function LoginPage() {
       if (!profileResponse.ok) {
         throw new Error('Failed to fetch user profile');
       }
-
+      
       const profileData = await profileResponse.json();
+      localStorage.setItem("name", profileData.name); // Store the user's name in localStorage
       console.log('User Profile:', profileData);
 
       // Redirect to the dashboard
