@@ -2,12 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Home, ListChecks, BarChart, AppWindowIcon } from "lucide-react";
+import { Home, ListChecks, BarChart, AppWindowIcon, Dog } from "lucide-react";
 
 export default function Sidebar() {
   const [activeTab, setActiveTab] = useState("progress");
   const [userName, setUserName] = useState("Loading..."); // Default state for the user's name
-  const [profilePicture, setProfilePicture] = useState("https://via.placeholder.com/150"); // Placeholder for profile picture
+  const [profilePicture, setProfilePicture] = useState("http://www.w3.org/2000/svg"); // Placeholder for profile picture
+  const [profileRank, setProfileRank] = useState("Rookie"); // Default state for the user's rank
   const router = useRouter();
 
   const handleNavigation = (tab: string, path: string) => {
@@ -40,7 +41,7 @@ export default function Sidebar() {
         {/* User Name */}
         <div>
           <h2 className="text-lg font-semibold">{userName}</h2>
-          <p className="text-sm text-gray-500">Learning Enthusiast</p>
+          <p className="text-sm text-gray-500">{profileRank}</p>
         </div>
       </div>
 
