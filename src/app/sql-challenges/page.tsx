@@ -18,6 +18,8 @@ export default function SqlChallengePage({ children }: { children: React.ReactNo
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [points, setPoints] = useState<number|null> (null);
 
+  const MAX_TIME = 100; // Maximum time in seconds
+
   useEffect(() => {
     const loadDb = async () => {
       const SQL = await initSqlJs({        
@@ -89,6 +91,7 @@ export default function SqlChallengePage({ children }: { children: React.ReactNo
       setQueryResult(null); // Clear the table on error
     }
   };
+  const progressPercentage = Math.max(((MAX_TIME - timer) / MAX_TIME) * 100, 0); // Calculate remaining progress
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -106,6 +109,14 @@ export default function SqlChallengePage({ children }: { children: React.ReactNo
             ⏱ Time Elapsed: <span className="font-bold">{timer} seconds</span>
           </p>
           </div>
+
+        
+        {/* Reverse Progress Bar */}
+      <div className="w-full h-4 bg-gray-300 rounded-full overflow-hidden mb-6">
+          <div className="h-full bg-blue-600 transition-all duration-1000 ease-linear"
+              style={{ width: `${progressPercentage}%` }}>
+          </div>
+      </div>  
 
         {/* SQL Input */}
         <textarea
