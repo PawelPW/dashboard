@@ -14,6 +14,10 @@ export default function SqlChallengePage({ children }: { children: React.ReactNo
   const [feedback, setFeedback] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [queryResult, setQueryResult] = useState<{ columns: string[]; values: any[][] } | null>(null);
+  const [timer, setTimer] = useState(0);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [points, setPoints] = useState<number|null> (null);
+
   useEffect(() => {
     const loadDb = async () => {
       const SQL = await initSqlJs({        
@@ -31,6 +35,17 @@ export default function SqlChallengePage({ children }: { children: React.ReactNo
     };
   
     loadDb();
+
+    const id = setInterval(() => {
+      setTimer((prev) => prev + 1);
+    }
+    , 1000);
+    setIntervalId(id);
+    return () => {
+      if (id) {
+        clearInterval(id);
+      }
+    }
   }, [challenge]);
   
   const handleRun = () => {
@@ -56,9 +71,19 @@ export default function SqlChallengePage({ children }: { children: React.ReactNo
       const pass =
         JSON.stringify(columns) === JSON.stringify(challenge.expectedResult.columns) &&
         JSON.stringify(values) === JSON.stringify(challenge.expectedResult.values);
-  
-      setFeedback(pass ? "✅ Correct!" : "❌ Incorrect, try again.");
-      setQueryResult({ columns, values }); // Show the table only when the query is valid
+      
+        if(pass){
+          setFeedback("Correct!")
+          setQueryResult({ columns, values }); // Show the table only when the query is valid    
+          if (intervalId) clearInterval(intervalId);
+          const calculatedPoints = Math.max(100 - timer, 10);
+          setPoints(calculatedPoints);
+
+        }else{
+          setFeedback("Incorrect, try again.");
+          setQueryResult(null);
+        }
+      
     } catch (err: any) {
       setFeedback("Error: " + err.message);
       setQueryResult(null); // Clear the table on error
@@ -74,6 +99,13 @@ export default function SqlChallengePage({ children }: { children: React.ReactNo
       <div className="flex-1 p-6 bg-white shadow-md rounded-lg mx-auto max-w-4xl">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">{challenge.title}</h1>
         <p className="text-gray-600 mb-6">{challenge.description}</p>
+
+        {/* Timer */}
+          <div className="mb-4">
+          <p className="text-gray-600">
+            ⏱ Time Elapsed: <span className="font-bold">{timer} seconds</span>
+          </p>
+          </div>
 
         {/* SQL Input */}
         <textarea
