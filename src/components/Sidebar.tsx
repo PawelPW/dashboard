@@ -2,13 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Home, ListChecks, BarChart, AppWindowIcon, Dog } from "lucide-react";
+import { Home, ListChecks, BarChart, AppWindowIcon, Dog, ChevronDown, ChevronRight } from "lucide-react";
 
 export default function Sidebar() {
   const [activeTab, setActiveTab] = useState("progress");
   const [userName, setUserName] = useState("Loading..."); // Default state for the user's name
   const [profilePicture, setProfilePicture] = useState("http://www.w3.org/2000/svg"); // Placeholder for profile picture
   const [profileRank, setProfileRank] = useState("Rookie"); // Default state for the user's rank
+  const [isLearningCenterOpen, setIsLearningCenterOpen] = useState(false); // State to toggle Learning Center submenu
+
   const router = useRouter();
 
   const handleNavigation = (tab: string, path: string) => {
@@ -88,13 +90,41 @@ export default function Sidebar() {
         >
           <AppWindowIcon size={18} /> Settings
         </li>
-        <li
-          className={`p-3 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
-            activeTab === "learning center" ? "bg-gray-300" : ""
-          }`}
-          onClick={() => handleNavigation("learning center", "/learning-center")}
-        >
-          <AppWindowIcon size={18} /> Learning center
+        <li>
+          {/* Learning Center Parent Item */}
+          <div
+            className={`p-3 flex items-center justify-between cursor-pointer rounded-lg hover:bg-gray-200 ${
+              activeTab === "learning center" ? "bg-gray-300" : ""
+            }`}
+            onClick={() => setIsLearningCenterOpen(!isLearningCenterOpen)}
+          >
+            <div className="flex items-center gap-2">
+              <AppWindowIcon size={18} /> Learning Center
+            </div>
+            {isLearningCenterOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+          </div>
+
+          {/* Learning Center Submenu */}
+          {isLearningCenterOpen && (
+            <ul className="ml-6 mt-2">
+              <li
+                className={`p-2 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
+                  activeTab === "materials" ? "bg-gray-300" : ""
+                }`}
+                onClick={() => handleNavigation("materials", "/learning-center/materials")}
+              >
+                📚 Materials
+              </li>
+              <li
+                className={`p-2 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
+                  activeTab === "quizzes" ? "bg-gray-300" : ""
+                }`}
+                onClick={() => handleNavigation("quizzes", "/learning-center/quizzes")}
+              >
+                📝 Quizzes
+              </li>
+            </ul>
+          )}
         </li>
       </ul>
     </nav>
