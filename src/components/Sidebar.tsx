@@ -88,6 +88,14 @@ export default function Sidebar() {
         >
           <AppWindowIcon size={18} /> Settings
         </li>
+        <li
+          className={`p-3 flex items-center gap-2 cursor-pointer rounded-lg hover:bg-gray-200 ${
+            activeTab === "learning center" ? "bg-gray-300" : ""
+          }`}
+          onClick={() => handleNavigation("learning center", "/learning-center")}
+        >
+          <AppWindowIcon size={18} /> Learning center
+        </li>
       </ul>
     </nav>
   );
