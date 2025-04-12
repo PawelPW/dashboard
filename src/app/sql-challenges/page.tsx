@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import initSqlJs, { Database } from "sql.js/dist/sql-wasm.js";
 import { sqlChallenges } from "../../../public/data/sqlChallenges";
 import Sidebar from "@/components/Sidebar";
+import ProgressBar from "@/components/ProgressBar";
 
 
 
@@ -112,12 +113,10 @@ export default function SqlChallengePage({ children }: { children: React.ReactNo
 
         
         {/* Reverse Progress Bar */}
-      <div className="w-full h-4 bg-gray-300 rounded-full overflow-hidden mb-6">
-          <div className="h-full bg-blue-600 transition-all duration-1000 ease-linear"
-              style={{ width: `${progressPercentage}%` }}>
-          </div>
-      </div>  
+        
+        <ProgressBar progressPercentage={progressPercentage} />
 
+        {/* Points */}
         {/* SQL Input */}
         <textarea
           className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
