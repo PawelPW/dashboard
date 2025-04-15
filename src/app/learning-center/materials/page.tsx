@@ -2,7 +2,9 @@
 import LearningCenterLayout from "@/components/LearningCenterLayout";
 import Button from "@/components/Button";
 import { materials } from "../../../../public/data/materials";
+import { useRouter } from "next/navigation";
 export default function LearningMaterialsPage() {
+  const router = useRouter();
   return (
     <LearningCenterLayout>
       {/* Header Section */}
@@ -34,7 +36,7 @@ export default function LearningMaterialsPage() {
               <h2 className="text-xl font-semibold">{material.title}</h2>
             </div>
             <p className="text-gray-600 mb-4">{material.description}</p>
-            <Button onClick={() => alert(`Viewing ${material.title}`)}>
+            <Button onClick={() => router.push(`/learning-center/materials/${material.id}`)}>
               View Material
             </Button>
           </div>
