@@ -16,10 +16,52 @@ datasource db {
 model User {
   id        Int    @id @default(autoincrement())
   createdAt DateTime  @default(now())
-  name     String
+  name      String
   email     String     @unique
   password  String
-  rank Rank @default(Beginner)
+  rank      Rank       @default(Beginner)
+  materialProgress MaterialProgress[]
+  quizProgress     QuizProgress[]
+  challengeProgress ChallengeProgress[]
+}
+
+model MaterialProgress {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  materialId Int
+  completed  Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  @@unique([userId, materialId]) // Compound unique constraint
+}
+
+model QuizProgress {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  quizId     Int
+  score      Int
+  completed  Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, quizId]) // Compound unique constraint
+
+}
+
+model ChallengeProgress {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  challengeId Int
+  attempts   Int
+  completed  Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, challengeId]) // Compound unique constraint
 }
 
 enum Rank {

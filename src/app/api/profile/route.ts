@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Return the user profile
+        console.log("User Profile:", user);
         return NextResponse.json(user, { status: 200 });
     } catch (error) {
         console.error("Error fetching user profile:", error);

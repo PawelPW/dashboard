@@ -47,8 +47,10 @@ export default function LoginPage() {
       }
       
       const profileData = await profileResponse.json();
+      console.log('Profile Data:', profileData);
       localStorage.setItem("name", profileData.name); // Store the user's name in localStorage
-      console.log('User Profile:', profileData);
+      console.log('User Profile:', profileData.id);
+      localStorage.setItem("userId", profileData.id); // Store the user's name in localStorage
 
       // Redirect to the dashboard
       router.push('/dashboard');
