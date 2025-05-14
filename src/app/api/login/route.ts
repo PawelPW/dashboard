@@ -23,10 +23,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
         console.log("Request:", body);
         const user = await db.get('SELECT * FROM User WHERE email = ? AND password = ?', [email, password]);
         if (user) {
-            console.log("User found:", user);//console.log("User found:", user);
             const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: '1h' });
             return NextResponse.json({ message: 'Login successful', token, user:{id: user.id} }, { status: 200 });
-            // response.status(200).json({ message: 'Login successful', user });
         } else {
             return NextResponse.json({error: 'Invalid email or password', user }, { status: 400 });
         }
